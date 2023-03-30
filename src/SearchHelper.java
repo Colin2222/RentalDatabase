@@ -73,8 +73,8 @@ public class SearchHelper {
 						if (i < columnCount) {
 							System.out.print(", ");
 						}
-						System.out.print("\n");
 					}
+					System.out.print("\n");
 				}
 				
 			} else {
@@ -89,10 +89,10 @@ public class SearchHelper {
 	}
 	
 	public static void SearchMember() {
-		System.out.print("Enter the last name of the member: ");
-		String lName = DatabaseInteractor.scanner.nextLine();
+		System.out.print("Enter the user ID of the member: ");
+		int userID = DatabaseInteractor.scanner.nextInt();
 		
-		ResultSet result = DatabaseInteractor.db.selectMemberByLastName(lName);
+		ResultSet result = DatabaseInteractor.db.selectMemberByUserID(userID);
 		
 		try {
 			if(result != null) {
@@ -113,12 +113,12 @@ public class SearchHelper {
 						if (i < columnCount) {
 							System.out.print(", ");
 						}
-						System.out.print("\n");
 					}
+					System.out.print("\n");
 				}
 				
 			} else {
-				System.out.println("No result found with last name: '" + lName + "'.");
+				System.out.println("No result found with user ID: '" + userID + "'.");
 			}
 			System.out.println();
 			DatabaseInteractor.scanner.nextLine();
@@ -130,7 +130,7 @@ public class SearchHelper {
 	}
 	
 	public static void SearchWarehouse() {
-		System.out.print("Enter the : ");
+		System.out.print("Enter the address of the warehouse: ");
 		String address = DatabaseInteractor.scanner.nextLine();
 		
 		ResultSet result = DatabaseInteractor.db.selectWarehouseByAddress(address);
@@ -154,8 +154,8 @@ public class SearchHelper {
 						if (i < columnCount) {
 							System.out.print(", ");
 						}
-						System.out.print("\n");
 					}
+					System.out.print("\n");
 				}
 				
 			} else {

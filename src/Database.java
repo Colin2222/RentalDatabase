@@ -6,11 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-import RecordTypes.Equipment;
-import RecordTypes.Member;
-import RecordTypes.Record;
-import RecordTypes.Warehouse;
-
 public class Database {
     private Connection conn;
 	private static String sqlInsertMember = "INSERT INTO MEMBER VALUES (?, ?, ?, ?, ?, ?, ?);";
@@ -357,10 +352,10 @@ public class Database {
 		}
 	}
 	
-	public ResultSet selectMemberByLastName(String lName) {
+	public ResultSet selectMemberByUserID(int userID) {
 		try {
 			PreparedStatement stmt = this.conn.prepareStatement(selectMemberByUserIDSQL);
-			stmt.setString(1, lName);
+			stmt.setInt(1, userID);
 			
 			ResultSet res = stmt.executeQuery();
 			return res;
