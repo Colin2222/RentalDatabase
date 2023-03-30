@@ -432,19 +432,19 @@ public class Database {
 	public <T> boolean updateEquipmentBySerialNo(String preparedQuery, String serialNo, T newValue) {
 		try {
 			PreparedStatement stmt = this.conn.prepareStatement(preparedQuery);
-			stmt.setString(1, serialNo);
+			stmt.setString(2, serialNo);
 			
 			if (newValue instanceof String) {
-				stmt.setString(2, (String)newValue);
+				stmt.setString(1, (String)newValue);
 				
 			} else if (newValue instanceof Integer) {
-				stmt.setInt(2, (int)newValue);
+				stmt.setInt(1, (int)newValue);
 				
 			} else if (newValue instanceof Float) {
-				stmt.setFloat(2, (float)newValue);
+				stmt.setFloat(1, (float)newValue);
 				
 			} else if (newValue instanceof LocalDate) {
-				stmt.setDate(2, java.sql.Date.valueOf((LocalDate)newValue));
+				stmt.setDate(1, java.sql.Date.valueOf((LocalDate)newValue));
 				
 			}
 			
@@ -461,19 +461,19 @@ public class Database {
 	public <T> boolean updateMemberByUserID(String preparedQuery, int userID, T newValue) {
 		try {
 			PreparedStatement stmt = this.conn.prepareStatement(preparedQuery);
-			stmt.setInt(1, userID);
+			stmt.setInt(2, userID);
 			
 			if (newValue instanceof String) {
-				stmt.setString(2, (String)newValue);
+				stmt.setString(1, (String)newValue);
 				
 			} else if (newValue instanceof Integer) {
-				stmt.setInt(2, (int)newValue);
+				stmt.setInt(1, (int)newValue);
 				
 			} else if (newValue instanceof Float) {
-				stmt.setFloat(2, (float)newValue);
+				stmt.setFloat(1, (float)newValue);
 				
 			} else if (newValue instanceof LocalDate) {
-				stmt.setDate(2, java.sql.Date.valueOf((LocalDate)newValue));
+				stmt.setDate(1, java.sql.Date.valueOf((LocalDate)newValue));
 				
 			}
 			
@@ -490,19 +490,19 @@ public class Database {
 	public <T> boolean updateWarehouseByAddress(String preparedQuery, String address, T newValue) {
 		try {
 			PreparedStatement stmt = this.conn.prepareStatement(preparedQuery);
-			stmt.setString(1, address);
+			stmt.setString(2, address);
 			
 			if (newValue instanceof String) {
-				stmt.setString(2, (String)newValue);
+				stmt.setString(1, (String)newValue);
 				
 			} else if (newValue instanceof Integer) {
-				stmt.setInt(2, (int)newValue);
+				stmt.setInt(1, (int)newValue);
 				
 			} else if (newValue instanceof Float) {
-				stmt.setFloat(2, (float)newValue);
+				stmt.setFloat(1, (float)newValue);
 				
 			} else if (newValue instanceof LocalDate) {
-				stmt.setDate(2, java.sql.Date.valueOf((LocalDate)newValue));
+				stmt.setDate(1, java.sql.Date.valueOf((LocalDate)newValue));
 				
 			}
 			
