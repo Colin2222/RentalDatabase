@@ -1,13 +1,4 @@
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.Date;
-
-import RecordTypes.Equipment;
-import RecordTypes.Member;
-import RecordTypes.Warehouse;
 
 public class CreateHelper {
 	public static void AddMenu() {
@@ -121,7 +112,12 @@ public class CreateHelper {
 		int userID = ++(DatabaseInteractor.maxUserId);
 		
 		DatabaseInteractor.scanner.nextLine();
-		DatabaseInteractor.db.insertMember(lName, fName, address, phoneNum, email, date, userID);
+		boolean success = DatabaseInteractor.db.insertMember(lName, fName, address, phoneNum, email, date, userID);
+		
+		if (success)
+			System.out.println("Success!");
+		else
+			System.out.println("Failure!");
 	}
 	
 	public static void AddWarehouse() {
@@ -150,7 +146,12 @@ public class CreateHelper {
 		int storageCap = DatabaseInteractor.scanner.nextInt();
 		
 		DatabaseInteractor.scanner.nextLine();
-		DatabaseInteractor.db.insertWarehouse(warehouseCity, address, managerName, phoneNum, droneCap, storageCap);
+		boolean success = DatabaseInteractor.db.insertWarehouse(warehouseCity, address, managerName, phoneNum, droneCap, storageCap);
+		
+		if (success)
+			System.out.println("Success!");
+		else
+			System.out.println("Failure!");
 	}
 	
 	public static void AddDroneFleet() {
@@ -171,7 +172,12 @@ public class CreateHelper {
 		float weightCap = DatabaseInteractor.scanner.nextFloat();
 		
 		DatabaseInteractor.scanner.nextLine();
-		DatabaseInteractor.db.insertDroneFleet(fleetID, distance, maxSpeed, weightCap);
+		boolean success = DatabaseInteractor.db.insertDroneFleet(fleetID, distance, maxSpeed, weightCap);
+		
+		if (success)
+			System.out.println("Success!");
+		else
+			System.out.println("Failure!");
 	}
 	
 	public static void AddDroneTech() {
@@ -197,7 +203,12 @@ public class CreateHelper {
 		System.out.print("Website: ");
 		String website = DatabaseInteractor.scanner.nextLine();
 		
-		DatabaseInteractor.db.insertDroneTech(phoneNo, techLName, techFName, techEmail, city, website);
+		boolean success = DatabaseInteractor.db.insertDroneTech(phoneNo, techLName, techFName, techEmail, city, website);
+		
+		if (success)
+			System.out.println("Success!");
+		else
+			System.out.println("Failure!");
 	}
 	
 	public static void AddSupplier() {
@@ -221,7 +232,12 @@ public class CreateHelper {
 		System.out.print("Phone Number: ");
 		String phoneNo = DatabaseInteractor.scanner.nextLine();
 		
-		DatabaseInteractor.db.insertSupplier(website, name, address, warehouse, phoneNo);
+		boolean success = DatabaseInteractor.db.insertSupplier(website, name, address, warehouse, phoneNo);
+		
+		if (success)
+			System.out.println("Success!");
+		else
+			System.out.println("Failure!");
 	}
 	
 	public static void AddItemModel() {
@@ -258,7 +274,12 @@ public class CreateHelper {
 		float weight = DatabaseInteractor.scanner.nextFloat();
 		
 		DatabaseInteractor.scanner.nextLine();
-		DatabaseInteractor.db.insertItemModel(modelNo, modelName, description, website, type, year, size, weight);
+		boolean success = DatabaseInteractor.db.insertItemModel(modelNo, modelName, description, website, type, year, size, weight);
+		
+		if (success)
+			System.out.println("Success!");
+		else
+			System.out.println("Failure!");
 	}
 	
 	public static void AddInventoryItem() {
@@ -282,7 +303,12 @@ public class CreateHelper {
 		System.out.print("Model no: ");
 		String modelNo = DatabaseInteractor.scanner.nextLine();
 		
-		DatabaseInteractor.db.insertInventoryItem(serialNo, warehouseAddress, invOrderID, warrantyExpiryDate, modelNo);
+		boolean success = DatabaseInteractor.db.insertInventoryItem(serialNo, warehouseAddress, invOrderID, warrantyExpiryDate, modelNo);
+		
+		if (success)
+			System.out.println("Success!");
+		else
+			System.out.println("Failure!");
 	}	
 	
 	public static void AddEquipment() {
@@ -298,7 +324,12 @@ public class CreateHelper {
 		System.out.print("Inventory id: ");
 		String invID = DatabaseInteractor.scanner.nextLine();
 		
-		DatabaseInteractor.db.insertEquipment(serialNo, rentalStatus, invID);
+		boolean success = DatabaseInteractor.db.insertEquipment(serialNo, rentalStatus, invID);
+		
+		if (success)
+			System.out.println("Success!");
+		else
+			System.out.println("Failure!");
 	}
 	
 	public static void AddEquipmentRental() {
@@ -323,7 +354,12 @@ public class CreateHelper {
 		System.out.print("Due date (yyyy-mm-dd): ");
 		LocalDate dueDate = LocalDate.parse(DatabaseInteractor.scanner.nextLine());
 
-		DatabaseInteractor.db.insertEquipmentRental(userID, serialNo, checkoutDate, returnDate, dueDate);
+		boolean success = DatabaseInteractor.db.insertEquipmentRental(userID, serialNo, checkoutDate, returnDate, dueDate);
+		
+		if (success)
+			System.out.println("Success!");
+		else
+			System.out.println("Failure!");
 	}
 	
 	public static void AddDrone() {
@@ -339,7 +375,12 @@ public class CreateHelper {
 		System.out.print("Availability (Available, Unavailable): ");
 		String availability = DatabaseInteractor.scanner.nextLine();
 		
-		DatabaseInteractor.db.insertDrone(serialNo, fleetID, availability);
+		boolean success = DatabaseInteractor.db.insertDrone(serialNo, fleetID, availability);
+		
+		if (success)
+			System.out.println("Success!");
+		else
+			System.out.println("Failure!");
 	}
 	
 	public static void AddEquipmentDelivery() {
@@ -355,7 +396,12 @@ public class CreateHelper {
 		System.out.print("delivery date (yyyy-mm-dd): ");
 		LocalDate deliveryDate = LocalDate.parse(DatabaseInteractor.scanner.nextLine());
 		
-		DatabaseInteractor.db.insertEquipmentDelivery(equipSerialNo, droneSerialNo, deliveryDate);
+		boolean success = DatabaseInteractor.db.insertEquipmentDelivery(equipSerialNo, droneSerialNo, deliveryDate);
+		
+		if (success)
+			System.out.println("Success!");
+		else
+			System.out.println("Failure!");
 	}
 	
 	public static void AddReview() {
@@ -380,7 +426,12 @@ public class CreateHelper {
 		System.out.print("Rating: ");
 		String rating = DatabaseInteractor.scanner.nextLine();
 		
-		DatabaseInteractor.db.insertReview(serialNo, reviewID, userID, comment, rating);
+		boolean success = DatabaseInteractor.db.insertReview(serialNo, reviewID, userID, comment, rating);
+		
+		if (success)
+			System.out.println("Success!");
+		else
+			System.out.println("Failure!");
 	}
 	
 	public static void AddInventoryOrder() {
@@ -413,7 +464,12 @@ public class CreateHelper {
 		System.out.print("Actual arrival date (yyyy-mm-dd): ");
 		LocalDate aad = LocalDate.parse(DatabaseInteractor.scanner.nextLine());
 		
-		DatabaseInteractor.db.insertInventoryOrder(warehouseAddress, supplierWebsite, orderId, modelNo, quantity, ead, aad);
+		boolean success = DatabaseInteractor.db.insertInventoryOrder(warehouseAddress, supplierWebsite, orderId, modelNo, quantity, ead, aad);
+		
+		if (success)
+			System.out.println("Success!");
+		else
+			System.out.println("Failure!");
 	}
 	
 	public static void AddDroneRepair() {
@@ -429,6 +485,11 @@ public class CreateHelper {
 		System.out.print("Date: ");
 		LocalDate date = LocalDate.parse(DatabaseInteractor.scanner.nextLine());
 		
-		DatabaseInteractor.db.insertDroneRepair(droneSerialNo, techPhoneNo, date);
+		boolean success = DatabaseInteractor.db.insertDroneRepair(droneSerialNo, techPhoneNo, date);
+		
+		if (success)
+			System.out.println("Success!");
+		else
+			System.out.println("Failure!");
 	}
 }

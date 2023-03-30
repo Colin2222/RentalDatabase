@@ -6,10 +6,34 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-public class Database {
-	private static String addEquipmentSql = "INSERT INTO EQUIPMENT VALUES (?, ?, ?);";
-    Connection conn;
+import RecordTypes.Equipment;
+import RecordTypes.Member;
+import RecordTypes.Record;
+import RecordTypes.Warehouse;
 
+public class Database {
+    private Connection conn;
+	private static String sqlInsertMember = "INSERT INTO MEMBER VALUES (?, ?, ?, ?, ?, ?, ?);";
+	private static String sqlInsertWarehouse = "INSERT INTO WAREHOUSE VALUES (?, ?, ?, ?, ?, ?);";
+	private static String sqlInsertDroneFleet = "INSERT INTO DRONE_FLEET VALUES (?, ?, ?, ?);";
+	private static String sqlInsertDroneTech = "INSERT INTO DRONE_TECH VALUES (?, ?, ?, ?, ?, ?);";
+	private static String sqlInsertSupplier = "INSERT INTO SUPPLIER VALUES (?, ?, ?, ?, ?);";
+	private static String sqlInsertItemModel = "INSERT INTO ITEM_MODEL VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+	private static String sqlInsertInventoryItem = "INSERT INTO INVENTORY_ITEM VALUES (?, ?, ?, ?, ?);";
+	private static String sqlInsertEquipment = "INSERT INTO EQUIPMENT VALUES (?, ?, ?);";
+	private static String sqlInsertEquipmentRental = "INSERT INTO EQUIPMENT_RENTAL VALUES (?, ?, ?, ?, ?);";
+	private static String sqlInsertDrone = "INSERT INTO DRONE VALUES (?, ?, ?);";
+	private static String sqlInsertEquipmentDelivery = "INSERT INTO EQUIPMENT_DELIVERY VALUES (?, ?, ?);";
+	private static String sqlInsertReview = "INSERT INTO REVIEW VALUES (?, ?, ?, ?, ?);";
+	private static String sqlInsertInventoryOrder = "INSERT INTO INVENTORY_ORDER VALUES (?, ?, ?, ?, ?, ?, ?);";
+	private static String sqlInsertDroneRepair = "INSERT INTO DRONE_REPAIR VALUES (?, ?, ?);";
+	private static String selectMemberByUserIDSQL = "SELECT * FROM MEMBER WHERE userID=?";
+	private static String selectWarehouseByAddressSQL = "SELECT * FROM WAREHOUSE WHERE address=?";
+	private static String selectEquipmentBySerialNoSQL = "SELECT * FROM EQUIPMENT WHERE serialNo=?";
+	private static String deleteMemberByUserIDSQL = "DELETE FROM MEMBER WHERE userID=?";
+	private static String deleteWarehouseByAddressSQL = "DELETE FROM WAREHOUSE WHERE address=?";
+	private static String deleteEquipmentBySerialNoSQL = "DELETE FROM EQUIPMENT WHERE serialNo=?";
+	
     public Database(String databaseFileName) {
         /**
          * The "Connection String" or "Connection URL".
@@ -39,9 +63,9 @@ public class Database {
         }
     }
 
-    public void insertMember(String lName, String fName, String address, String phoneNum, String email, LocalDate date, int userID) {
+    public boolean insertMember(String lName, String fName, String address, String phoneNum, String email, LocalDate date, int userID) {
 		try {
-			PreparedStatement stmt = this.conn.prepareStatement(addEquipmentSql);
+			PreparedStatement stmt = this.conn.prepareStatement(sqlInsertMember);
 			
 			stmt.setString(3, lName);
 			stmt.setString(2, fName);
@@ -53,16 +77,17 @@ public class Database {
 			
 			stmt.executeUpdate();
 			
-			System.out.println("Insertion successful");
+			return true;
 			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+			return false;
 		}
 	}
 	
-	public void insertWarehouse(String city, String address, String managerName, String phoneNum, int droneCap, int storageCap) {
+	public boolean insertWarehouse(String city, String address, String managerName, String phoneNum, int droneCap, int storageCap) {
 		try {
-			PreparedStatement stmt = this.conn.prepareStatement(addEquipmentSql);
+			PreparedStatement stmt = this.conn.prepareStatement(sqlInsertWarehouse);
 			
 			stmt.setString(2, city);
 			stmt.setString(1, address);
@@ -72,17 +97,18 @@ public class Database {
 			stmt.setInt(4, storageCap);
 			
 			stmt.executeUpdate();
-			
-			System.out.println("Insertion successful");
+
+			return true;
 			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+			return false;
 		}
 	}
 	
-	public void insertDroneFleet(String fleetID, float distance, float maxSpeed, float weightCap) {
+	public boolean insertDroneFleet(String fleetID, float distance, float maxSpeed, float weightCap) {
 		try {
-			PreparedStatement stmt = this.conn.prepareStatement(addEquipmentSql);
+			PreparedStatement stmt = this.conn.prepareStatement(sqlInsertDroneFleet);
 			
 			stmt.setString(1, fleetID);
 			stmt.setFloat(2, distance);
@@ -90,17 +116,18 @@ public class Database {
 			stmt.setFloat(2, weightCap);
 			
 			stmt.executeUpdate();
-			
-			System.out.println("Insertion successful");
+
+			return true;
 			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+			return false;
 		}
 	}
 	
-	public void insertDroneTech(String phoneNum, String lName, String fName, String email, String city, String website) {
+	public boolean insertDroneTech(String phoneNum, String lName, String fName, String email, String city, String website) {
 		try {
-			PreparedStatement stmt = this.conn.prepareStatement(addEquipmentSql);
+			PreparedStatement stmt = this.conn.prepareStatement(sqlInsertDroneTech);
 			
 			stmt.setString(1, phoneNum);
 			stmt.setString(3, lName);
@@ -110,17 +137,18 @@ public class Database {
 			stmt.setString(6, website); 
 			
 			stmt.executeUpdate();
-			
-			System.out.println("Insertion successful");
+
+			return true;
 			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+			return false;
 		}
 	}
 	
-	public void insertSupplier(String website, String name, String address, String warehouse, String phoneNum) {
+	public boolean insertSupplier(String website, String name, String address, String warehouse, String phoneNum) {
 		try {
-			PreparedStatement stmt = this.conn.prepareStatement(addEquipmentSql);
+			PreparedStatement stmt = this.conn.prepareStatement(sqlInsertSupplier);
 			
 			stmt.setString(1, website);
 			stmt.setString(2, name);
@@ -129,17 +157,18 @@ public class Database {
 			stmt.setString(5, phoneNum);
 			
 			stmt.executeUpdate();
-			
-			System.out.println("Insertion successful");
+
+			return true;
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+			return false;
 		}
 	}
 	
-	public void insertItemModel(String modelNo, String modelName, String description, String website, String type, int year, float size, float weight) {
+	public boolean insertItemModel(String modelNo, String modelName, String description, String website, String type, int year, float size, float weight) {
 		try {
-			PreparedStatement stmt = this.conn.prepareStatement(addEquipmentSql);
+			PreparedStatement stmt = this.conn.prepareStatement(sqlInsertItemModel);
 			
 			stmt.setString(1, modelNo);
 			stmt.setString(2, modelName);
@@ -151,17 +180,18 @@ public class Database {
 			stmt.setFloat(8, weight);
 			
 			stmt.executeUpdate();
-			
-			System.out.println("Insertion successful");
+
+			return true;
 			
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+			return false;
 		}
 	}
 	
-	public void insertInventoryItem(String serialNo, String warehouseAddress, String invOrderNo, LocalDate warrantyExpiryDate, String modelNo) {
+	public boolean insertInventoryItem(String serialNo, String warehouseAddress, String invOrderNo, LocalDate warrantyExpiryDate, String modelNo) {
 		try {
-			PreparedStatement stmt = this.conn.prepareStatement(addEquipmentSql);
+			PreparedStatement stmt = this.conn.prepareStatement(sqlInsertInventoryItem);
 			
 			stmt.setString(2, serialNo);
 			stmt.setString(1, warehouseAddress);
@@ -170,34 +200,36 @@ public class Database {
 			stmt.setString(5, modelNo);
 			
 			stmt.executeUpdate();
-			
-			System.out.println("Insertion successful");
+
+			return true;
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+			return false;
 		}
 	}
 	
-	public void insertEquipment(String serialNo, String rentalStatus, String invID) {
+	public boolean insertEquipment(String serialNo, String rentalStatus, String invID) {
 		try {
-			PreparedStatement stmt = this.conn.prepareStatement(addEquipmentSql);
+			PreparedStatement stmt = this.conn.prepareStatement(sqlInsertEquipment);
 			
 			stmt.setString(1, serialNo);
 			stmt.setString(2, rentalStatus);
 			stmt.setString(3, invID);
 			
 			stmt.executeUpdate();
-			
-			System.out.println("Insertion successful");
+
+			return true;
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+			return false;
 		}
 	}
 	
-	public void insertEquipmentRental(int userID, String serialNo, LocalDate checkoutDate, LocalDate returnDate, LocalDate dueDate) {
+	public boolean insertEquipmentRental(int userID, String serialNo, LocalDate checkoutDate, LocalDate returnDate, LocalDate dueDate) {
 		try {
-			PreparedStatement stmt = this.conn.prepareStatement(addEquipmentSql);
+			PreparedStatement stmt = this.conn.prepareStatement(sqlInsertEquipmentRental);
 			
 			stmt.setInt(1, userID);
 			stmt.setString(2, serialNo);
@@ -206,51 +238,54 @@ public class Database {
 			stmt.setDate(5, java.sql.Date.valueOf(dueDate));
 			
 			stmt.executeUpdate();
-			
-			System.out.println("Insertion successful");
+
+			return true;
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+			return false;
 		}
 	}
 	
-	public void insertDrone(String serialNo, String fleetID, String availability) {
+	public boolean insertDrone(String serialNo, String fleetID, String availability) {
 		try {
-			PreparedStatement stmt = conn.prepareStatement(addEquipmentSql);
+			PreparedStatement stmt = conn.prepareStatement(sqlInsertDrone);
 			
 			stmt.setString(1, serialNo);
 			stmt.setString(2, fleetID);
 			stmt.setString(3, availability);
 			
 			stmt.executeUpdate();
-			
-			System.out.println("Insertion successful");
+
+			return true;
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+			return false;
 		}
 	}
 	
-	public void insertEquipmentDelivery(String equipSerialNo, String droneSerialNo, LocalDate deliveryDate) {
+	public boolean insertEquipmentDelivery(String equipSerialNo, String droneSerialNo, LocalDate deliveryDate) {
 		try {
-			PreparedStatement stmt = this.conn.prepareStatement(addEquipmentSql);
+			PreparedStatement stmt = this.conn.prepareStatement(sqlInsertEquipmentDelivery);
 			
 			stmt.setString(1, equipSerialNo);
 			stmt.setString(2, droneSerialNo);
 			stmt.setDate(3, java.sql.Date.valueOf(deliveryDate));
 			
 			stmt.executeUpdate();
-			
-			System.out.println("Insertion successful");
+
+			return true;
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+			return false;
 		}
 	}
 	
-	public void insertReview(String equipSerialNo, String reviewID, int userID, String comment, String rating) {
+	public boolean insertReview(String equipSerialNo, String reviewID, int userID, String comment, String rating) {
 		try {
-			PreparedStatement stmt = this.conn.prepareStatement(addEquipmentSql);
+			PreparedStatement stmt = this.conn.prepareStatement(sqlInsertReview);
 			
 			stmt.setString(1, equipSerialNo);
 			stmt.setString(2, reviewID);
@@ -259,17 +294,18 @@ public class Database {
 			stmt.setString(5, rating);
 			
 			stmt.executeUpdate();
-			
-			System.out.println("Insertion successful");
+
+			return true;
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+			return false;
 		}
 	}
 	
-	public void insertInventoryOrder(String warehouseAddress, String supplierAddress, String orderID, String modelNo, float quantity, LocalDate ead, LocalDate aad) {
+	public boolean insertInventoryOrder(String warehouseAddress, String supplierAddress, String orderID, String modelNo, float quantity, LocalDate ead, LocalDate aad) {
 		try {
-			PreparedStatement stmt = this.conn.prepareStatement(addEquipmentSql);
+			PreparedStatement stmt = this.conn.prepareStatement(sqlInsertInventoryOrder);
 			
 			stmt.setString(1, warehouseAddress);
 			stmt.setString(2, supplierAddress);
@@ -280,29 +316,202 @@ public class Database {
 			stmt.setDate(7, java.sql.Date.valueOf(aad));
 			
 			stmt.executeUpdate();
-			
-			System.out.println("Insertion successful");
+
+			return true;
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+			return false;
 		}
 	}
 	
-	public void insertDroneRepair(String droneSerialNo, String techPhoneNum, LocalDate date) {
+	public boolean insertDroneRepair(String droneSerialNo, String techPhoneNum, LocalDate date) {
 		try {
-			PreparedStatement stmt = this.conn.prepareStatement(addEquipmentSql);
+			PreparedStatement stmt = this.conn.prepareStatement(sqlInsertDroneRepair);
 			
 			stmt.setString(1, droneSerialNo);
 			stmt.setString(2, techPhoneNum);
 			stmt.setDate(3, java.sql.Date.valueOf(date));
 			
 			stmt.executeUpdate();
-			
-			System.out.println("Insertion successful");
+
+			return true;
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+			return false;
 		}
 	}
-
+	
+	public ResultSet selectEquipmentBySerialNo(String serialNo) {
+		try {
+			PreparedStatement stmt = this.conn.prepareStatement(selectEquipmentBySerialNoSQL);
+			stmt.setString(1, serialNo);
+			
+			ResultSet res = stmt.executeQuery();
+			return res;
+			
+		} catch (SQLException e ){
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+	
+	public ResultSet selectMemberByLastName(String lName) {
+		try {
+			PreparedStatement stmt = this.conn.prepareStatement(selectMemberByUserIDSQL);
+			stmt.setString(1, lName);
+			
+			ResultSet res = stmt.executeQuery();
+			return res;
+			
+		} catch (SQLException e ){
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+	
+	public ResultSet selectWarehouseByAddress(String address) {
+		try {
+			PreparedStatement stmt = this.conn.prepareStatement(selectWarehouseByAddressSQL);
+			stmt.setString(1, address);
+			
+			ResultSet res = stmt.executeQuery();
+			return res;
+			
+		} catch (SQLException e ){
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+	
+	public boolean deleteEquipmentBySerialNo(String serialNo) {
+		try {
+			PreparedStatement stmt = this.conn.prepareStatement(deleteEquipmentBySerialNoSQL);
+			stmt.setString(1, serialNo);
+			
+			stmt.executeQuery();
+			
+			return true;
+			
+		} catch (SQLException e ){
+			System.out.println(e.getMessage());
+			return false;
+		}
+	}
+	
+	public boolean deleteMemberByUserID(int userID) {
+		try {
+			PreparedStatement stmt = this.conn.prepareStatement(deleteMemberByUserIDSQL);
+			stmt.setInt(1, userID);
+			
+			stmt.executeQuery();
+			
+			return true;
+			
+		} catch (SQLException e ){
+			System.out.println(e.getMessage());
+			return false;
+		}
+	}
+	
+	public boolean deleteWarehouseByAddress(String address) {
+		try {
+			PreparedStatement stmt = this.conn.prepareStatement(deleteWarehouseByAddressSQL);
+			stmt.setString(1, address);
+			
+			stmt.executeQuery();
+			return true;
+			
+		} catch (SQLException e ){
+			System.out.println(e.getMessage());
+			return false;
+		}
+	}
+	
+	public <T> boolean updateEquipmentBySerialNo(String preparedQuery, String serialNo, T newValue) {
+		try {
+			PreparedStatement stmt = this.conn.prepareStatement(preparedQuery);
+			stmt.setString(1, serialNo);
+			
+			if (newValue instanceof String) {
+				stmt.setString(2, (String)newValue);
+				
+			} else if (newValue instanceof Integer) {
+				stmt.setInt(2, (int)newValue);
+				
+			} else if (newValue instanceof Float) {
+				stmt.setFloat(2, (float)newValue);
+				
+			} else if (newValue instanceof LocalDate) {
+				stmt.setDate(2, java.sql.Date.valueOf((LocalDate)newValue));
+				
+			}
+			
+			stmt.executeQuery();
+			
+			return true;
+			
+		} catch (SQLException e ){
+			System.out.println(e.getMessage());
+			return false;
+		}
+	}
+	
+	public <T> boolean updateMemberByUserID(String preparedQuery, int userID, T newValue) {
+		try {
+			PreparedStatement stmt = this.conn.prepareStatement(preparedQuery);
+			stmt.setInt(1, userID);
+			
+			if (newValue instanceof String) {
+				stmt.setString(2, (String)newValue);
+				
+			} else if (newValue instanceof Integer) {
+				stmt.setInt(2, (int)newValue);
+				
+			} else if (newValue instanceof Float) {
+				stmt.setFloat(2, (float)newValue);
+				
+			} else if (newValue instanceof LocalDate) {
+				stmt.setDate(2, java.sql.Date.valueOf((LocalDate)newValue));
+				
+			}
+			
+			stmt.executeQuery();
+			
+			return true;
+			
+		} catch (SQLException e ){
+			System.out.println(e.getMessage());
+			return false;
+		}
+	}
+	
+	public <T> boolean updateWarehouseByAddress(String preparedQuery, String address, T newValue) {
+		try {
+			PreparedStatement stmt = this.conn.prepareStatement(preparedQuery);
+			stmt.setString(1, address);
+			
+			if (newValue instanceof String) {
+				stmt.setString(2, (String)newValue);
+				
+			} else if (newValue instanceof Integer) {
+				stmt.setInt(2, (int)newValue);
+				
+			} else if (newValue instanceof Float) {
+				stmt.setFloat(2, (float)newValue);
+				
+			} else if (newValue instanceof LocalDate) {
+				stmt.setDate(2, java.sql.Date.valueOf((LocalDate)newValue));
+				
+			}
+			
+			stmt.executeQuery();
+			return true;
+			
+		} catch (SQLException e ){
+			System.out.println(e.getMessage());
+			return false;
+		}
+	}
 }

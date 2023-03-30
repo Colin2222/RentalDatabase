@@ -1,21 +1,10 @@
-import java.util.ArrayList;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.Scanner;
-import java.time.*;
-import RecordTypes.*;
 
 public class DatabaseInteractor {
 	private static String DATABASE_FP = "checkpoint_3.db";
 	
 	public static Scanner scanner;
 	public static Database db;
-	public static ArrayList<Member> members;
-	public static ArrayList<Equipment> equipments;
-	public static ArrayList<Warehouse> warehouses;
 	public static int maxSerialNumber = 0;
 	public static int maxInventoryId = 0;
 	public static int maxUserId = 0;
@@ -23,9 +12,6 @@ public class DatabaseInteractor {
 	public static void main(String[] args)
 	{
 		scanner = new Scanner(System.in);
-		members = new ArrayList<Member>();
-		equipments = new ArrayList<Equipment>();
-		warehouses = new ArrayList<Warehouse>();
 		db = new Database(DATABASE_FP);
 		TopLayerMenu();
 	}

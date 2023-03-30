@@ -1,7 +1,6 @@
-import RecordTypes.Equipment;
-import RecordTypes.Member;
-import RecordTypes.Warehouse;
-import RecordTypes.Record;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 
 public class SearchHelper {
 	public static Record SearchMenu() {
@@ -49,111 +48,124 @@ public class SearchHelper {
 		return result;
 	}
 	
-	public static Record SearchEquipment() {
-		Equipment result = null;
-		System.out.print("Enter the name of the equipment: ");
-		String searchTerm = DatabaseInteractor.scanner.nextLine();
+	public static void SearchEquipment() {
+		System.out.print("Enter the serial number of the equipment: ");
+		String serialNo = DatabaseInteractor.scanner.nextLine();
 		
-		boolean resultFound = false;
-		for(Equipment x : DatabaseInteractor.equipments) {
-			if(x.name.contains(searchTerm)) {
-				resultFound = true; 
-				result = x;
-				break;
-			}
-		}
+		ResultSet result = DatabaseInteractor.db.selectEquipmentBySerialNo(serialNo);
 		
-		if(resultFound) {
-			System.out.println("Result found:");
-			System.out.println("Name: " + result.name);
-			System.out.println("Serial Number: " + result.serialNo);
-			System.out.println("Model Number: " + result.modelNo);
-			System.out.println("Inventory ID: " + result.inventoryId);
-			System.out.println("Type: " + result.type);
-			System.out.println("Description: " + result.description);
-			System.out.println("Manufacturer: " + result.manufacturer);
-			System.out.println("Year: " + result.year);
-			System.out.println("Size: " + result.size + "m^3");
-			System.out.println("Weight: " + result.weight + "kg");
-			System.out.println("Warranty Expiration Date: " + result.warrantyExpirationDate);
-			System.out.println("Location Code: " + result.locationCode);
-			System.out.print("Currently available to rent: ");
-			if(result.rentalStatus == 0) {
-				System.out.println("YES");
+		try {
+			if(result != null) {
+				ResultSetMetaData rsmd = result.getMetaData();
+				int columnCount = rsmd.getColumnCount();
+				for (int i = 1; i <= columnCount; i++) {
+					String value = rsmd.getColumnName(i);
+					System.out.print(value);
+					if (i < columnCount) {
+						System.out.print(", ");
+					}
+				}
+				System.out.print("\n");
+				while (result.next()) {
+					for (int i = 1; i <= columnCount; i++) {
+						String columnValue = result.getString(i);
+						System.out.print(columnValue);
+						if (i < columnCount) {
+							System.out.print(", ");
+						}
+						System.out.print("\n");
+					}
+				}
+				
 			} else {
-				System.out.println("NO");
+				System.out.println("No result found with serial number: '" + serialNo + "'.");
 			}
-			
-		} else {
-			System.out.println("No result found with search term '" + searchTerm + "'.");
+			System.out.println();
+			DatabaseInteractor.scanner.nextLine();
+		} catch (SQLException e) {
+			System.out.println("Error processing query results.");
+			System.out.println(e.getMessage());
 		}
-		System.out.println();
-		DatabaseInteractor.scanner.nextLine();
-		
-		return result;
 	}
 	
-	public static Record SearchMember() {
-		Member result = null;
+	public static void SearchMember() {
 		System.out.print("Enter the last name of the member: ");
-		String searchTerm = DatabaseInteractor.scanner.nextLine();
+		String lName = DatabaseInteractor.scanner.nextLine();
 		
-		boolean resultFound = false;
-		for(Member x : DatabaseInteractor.members) {
-			if(x.lName.contains(searchTerm)) {
-				resultFound = true; 
-				result = x;
-				break;
+		ResultSet result = DatabaseInteractor.db.selectMemberByLastName(lName);
+		
+		try {
+			if(result != null) {
+				ResultSetMetaData rsmd = result.getMetaData();
+				int columnCount = rsmd.getColumnCount();
+				for (int i = 1; i <= columnCount; i++) {
+					String value = rsmd.getColumnName(i);
+					System.out.print(value);
+					if (i < columnCount) {
+						System.out.print(", ");
+					}
+				}
+				System.out.print("\n");
+				while (result.next()) {
+					for (int i = 1; i <= columnCount; i++) {
+						String columnValue = result.getString(i);
+						System.out.print(columnValue);
+						if (i < columnCount) {
+							System.out.print(", ");
+						}
+						System.out.print("\n");
+					}
+				}
+				
+			} else {
+				System.out.println("No result found with last name: '" + lName + "'.");
 			}
+			System.out.println();
+			DatabaseInteractor.scanner.nextLine();
+		} catch (SQLException e) {
+			System.out.println("Error processing query results.");
+			System.out.println(e.getMessage());
 		}
 		
-		if(resultFound) {
-			System.out.println("Result found:");
-			System.out.println("Name: " + result.fName + " " + result.lName);
-			System.out.println("User ID: " + result.userId);
-			System.out.println("Address: " + result.address);
-			System.out.println("Phone Number: " + result.phoneNumber);
-			System.out.println("Email: " + result.email);
-			System.out.println("Start Date: " + result.startDate);
-			
-		} else {
-			System.out.println("No result found with search term '" + searchTerm + "'.");
-		}
-		System.out.println();
-		DatabaseInteractor.scanner.nextLine();
-		
-		return result;
 	}
 	
-	public static Record SearchWarehouse() {
-		Warehouse result = null;
-		System.out.print("Enter the address or the city of the warehouse: ");
-		String searchTerm = DatabaseInteractor.scanner.nextLine();
+	public static void SearchWarehouse() {
+		System.out.print("Enter the : ");
+		String address = DatabaseInteractor.scanner.nextLine();
 		
-		boolean resultFound = false;
-		for(Warehouse x : DatabaseInteractor.warehouses) {
-			if(x.address.contains(searchTerm) || x.city.contains(searchTerm)) {
-				resultFound = true; 
-				result = x;
-				break;
+		ResultSet result = DatabaseInteractor.db.selectWarehouseByAddress(address);
+		
+		try {
+			if(result != null) {
+				ResultSetMetaData rsmd = result.getMetaData();
+				int columnCount = rsmd.getColumnCount();
+				for (int i = 1; i <= columnCount; i++) {
+					String value = rsmd.getColumnName(i);
+					System.out.print(value);
+					if (i < columnCount) {
+						System.out.print(", ");
+					}
+				}
+				System.out.print("\n");
+				while (result.next()) {
+					for (int i = 1; i <= columnCount; i++) {
+						String columnValue = result.getString(i);
+						System.out.print(columnValue);
+						if (i < columnCount) {
+							System.out.print(", ");
+						}
+						System.out.print("\n");
+					}
+				}
+				
+			} else {
+				System.out.println("No result found with address: '" + address + "'.");
 			}
+			System.out.println();
+			DatabaseInteractor.scanner.nextLine();
+		} catch (SQLException e) {
+			System.out.println("Error processing query results.");
+			System.out.println(e.getMessage());
 		}
-		
-		if(resultFound) {
-			System.out.println("Result found:");
-			System.out.println("City: " + result.city);
-			System.out.println("Address: " + result.address);
-			System.out.println("Phone Number: " + result.phoneNumber);
-			System.out.println("Manager Name: " + result.managerName);
-			System.out.println("Drone Cap: " + result.droneCap);
-			System.out.println("Storage Cap: " + result.storageCap);
-			
-		} else {
-			System.out.println("No result found with search term '" + searchTerm + "'.");
-		}
-		System.out.println();
-		DatabaseInteractor.scanner.nextLine();
-		
-		return result;
 	}
 }
