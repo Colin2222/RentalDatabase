@@ -105,11 +105,11 @@ public class CreateHelper {
 		System.out.print("Email: ");
 		String email = DatabaseInteractor.scanner.nextLine();
 		
-		// set start date of member to current date
-		LocalDate date = LocalDate.now();
-		
 		// set procedural values (user ID)
 		int userID = ++(DatabaseInteractor.maxUserId);
+		
+		// set start date of member to current date
+		LocalDate date = LocalDate.now();
 		
 		DatabaseInteractor.scanner.nextLine();
 		boolean success = DatabaseInteractor.db.insertMember(lName, fName, address, phoneNum, email, date, userID);

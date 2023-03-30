@@ -23,11 +23,15 @@ public class Database {
 	private static String sqlInsertInventoryOrder = "INSERT INTO INVENTORY_ORDER VALUES (?, ?, ?, ?, ?, ?, ?);";
 	private static String sqlInsertDroneRepair = "INSERT INTO DRONE_REPAIR VALUES (?, ?, ?);";
 	private static String selectMemberByUserIDSQL = "SELECT * FROM MEMBER WHERE userID=?";
-	private static String selectWarehouseByAddressSQL = "SELECT * FROM WAREHOUSE WHERE address=?";
-	private static String selectEquipmentBySerialNoSQL = "SELECT * FROM EQUIPMENT WHERE serialNo=?";
-	private static String deleteMemberByUserIDSQL = "DELETE FROM MEMBER WHERE userID=?";
-	private static String deleteWarehouseByAddressSQL = "DELETE FROM WAREHOUSE WHERE address=?";
-	private static String deleteEquipmentBySerialNoSQL = "DELETE FROM EQUIPMENT WHERE serialNo=?";
+	private static String selectWarehouseByAddressSQL = "SELECT * FROM WAREHOUSE WHERE address=?;";
+	
+	
+	
+	
+	private static String selectEquipmentBySerialNoSQL = "SELECT * FROM EQUIPMENT WHERE serialNo=?;";
+	private static String deleteMemberByUserIDSQL = "DELETE FROM MEMBER WHERE userID=?;";
+	private static String deleteWarehouseByAddressSQL = "DELETE FROM WAREHOUSE WHERE address=?;";
+	private static String deleteEquipmentBySerialNoSQL = "DELETE FROM EQUIPMENT WHERE serialNo=?;";
 	
     public Database(String databaseFileName) {
         /**
@@ -385,7 +389,7 @@ public class Database {
 			PreparedStatement stmt = this.conn.prepareStatement(deleteEquipmentBySerialNoSQL);
 			stmt.setString(1, serialNo);
 			
-			stmt.executeQuery();
+			stmt.executeUpdate();
 			
 			return true;
 			
@@ -400,7 +404,7 @@ public class Database {
 			PreparedStatement stmt = this.conn.prepareStatement(deleteMemberByUserIDSQL);
 			stmt.setInt(1, userID);
 			
-			stmt.executeQuery();
+			stmt.executeUpdate();
 			
 			return true;
 			
@@ -415,7 +419,7 @@ public class Database {
 			PreparedStatement stmt = this.conn.prepareStatement(deleteWarehouseByAddressSQL);
 			stmt.setString(1, address);
 			
-			stmt.executeQuery();
+			stmt.executeUpdate();
 			return true;
 			
 		} catch (SQLException e ){
@@ -443,7 +447,7 @@ public class Database {
 				
 			}
 			
-			stmt.executeQuery();
+			stmt.executeUpdate();
 			
 			return true;
 			
@@ -472,7 +476,7 @@ public class Database {
 				
 			}
 			
-			stmt.executeQuery();
+			stmt.executeUpdate();
 			
 			return true;
 			
@@ -501,7 +505,7 @@ public class Database {
 				
 			}
 			
-			stmt.executeQuery();
+			stmt.executeUpdate();
 			return true;
 			
 		} catch (SQLException e ){

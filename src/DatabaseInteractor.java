@@ -7,7 +7,7 @@ public class DatabaseInteractor {
 	public static Database db;
 	public static int maxSerialNumber = 0;
 	public static int maxInventoryId = 0;
-	public static int maxUserId = 0;
+	public static int maxUserId = 18;
 	
 	public static void main(String[] args)
 	{

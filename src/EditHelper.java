@@ -1,9 +1,7 @@
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.time.LocalDate;
-
-import RecordTypes.Equipment;
-import RecordTypes.Member;
-import RecordTypes.Record;
-import RecordTypes.Warehouse;
 
 public class EditHelper {
 	public static void EditMenu() {
@@ -49,99 +47,74 @@ public class EditHelper {
 	}
 	
 	public static void EditEquipment() {
-		Equipment result = null;
 		System.out.print("Enter the serial number of the equipment: ");
-		int searchTerm = DatabaseInteractor.scanner.nextInt();
+		String serialNo = DatabaseInteractor.scanner.nextLine();
+
+		ResultSet result = DatabaseInteractor.db.selectEquipmentBySerialNo(serialNo);
 		
-		boolean resultFound = false;
-		for(Equipment x : DatabaseInteractor.equipments) {
-			if(x.serialNo == searchTerm) {
-				resultFound = true; 
-				result = x;
-				break;
+		if(result != null) {
+			try {
+				ResultSetMetaData rsmd = result.getMetaData();
+				int columnCount = rsmd.getColumnCount();
+				for (int i = 1; i <= columnCount; i++) {
+					String value = rsmd.getColumnName(i);
+					System.out.print(value);
+					if (i < columnCount) {
+						System.out.print(", ");
+					}
+				}
+				System.out.print("\n");
+				while (result.next()) {
+					for (int i = 1; i <= columnCount; i++) {
+						String columnValue = result.getString(i);
+						System.out.print(columnValue);
+						if (i < columnCount) {
+							System.out.print(", ");
+						}
+					}
+					System.out.print("\n");
+				}
+			} catch (SQLException e) {
+				
+				System.out.println(e.getMessage());
 			}
-		}
-		
-		if(resultFound) {
-			System.out.println("Result found, enter the number corresponding to the attribute to edit:");
-			System.out.println("1. Name: " + result.name);
-			System.out.println("2. Serial Number: " + result.serialNo);
-			System.out.println("3. Model Number: " + result.modelNo);
-			System.out.println("4. Inventory ID: " + result.inventoryId);
-			System.out.println("5. Type: " + result.type);
-			System.out.println("6. Description: " + result.description);
-			System.out.println("7. Manufacturer: " + result.manufacturer);
-			System.out.println("8. Year: " + result.year);
-			System.out.println("9. Size: " + result.size + "m^3");
-			System.out.println("10. Weight: " + result.weight + "kg");
-			System.out.println("11. Warranty Expiration Date: " + result.warrantyExpirationDate);
-			System.out.println("12. Location Code: " + result.locationCode);
-			System.out.print("13. Currently available to rent: ");
-			if(result.rentalStatus == 0) {
-				System.out.println("YES");
-			} else {
-				System.out.println("NO");
+
+			System.out.print("Select number corresponding to the column of the attribute to edit: ");
+			int attributeSelection = DatabaseInteractor.scanner.nextInt();
+			String query;
+			DatabaseInteractor.scanner.nextLine();
+			boolean success = false;
+			switch(attributeSelection) {
+				case 1:
+					System.out.print("Enter new equipment serial number: ");
+					String newSerialNo = DatabaseInteractor.scanner.nextLine();
+					
+					query = "UPDATE EQUIPMENT SET serialNo=? WHERE serialNo=?";
+					success = DatabaseInteractor.db.updateEquipmentBySerialNo(query, serialNo, newSerialNo);
+					break;
+				case 2:
+					System.out.print("Enter new equipment rental status (Available or Rented): ");
+					String newRentalStatus = DatabaseInteractor.scanner.nextLine();
+					
+					query = "UPDATE EQUIPMENT SET rentalStatus=? WHERE serialNo=?";
+					success = DatabaseInteractor.db.updateEquipmentBySerialNo(query, serialNo, newRentalStatus);
+					break;
+				case 3:
+					System.out.print("Enter new equipment inventory ID: ");
+					String newInvID = DatabaseInteractor.scanner.nextLine();
+					
+					query = "UPDATE EQUIPMENT SET inventoryID=? WHERE serialNo=?";
+					success = DatabaseInteractor.db.updateEquipmentBySerialNo(query, serialNo, newInvID);
+					break;
+				default:
+					System.out.println("Invalid attribute number");
+					break;
 			}
 			
-			int attributeSelection = DatabaseInteractor.scanner.nextInt();
-			DatabaseInteractor.scanner.nextLine();
-			switch(attributeSelection) {
-			case 1:
-				System.out.print("Enter the new name: ");
-				result.name = DatabaseInteractor.scanner.nextLine();
-				break;
-			case 2:
-				System.out.print("Enter the new serial number: ");
-				result.serialNo = Integer.parseInt(DatabaseInteractor.scanner.nextLine());
-				break;
-			case 3:
-				System.out.print("Enter the new model number: ");
-				result.modelNo = Integer.parseInt(DatabaseInteractor.scanner.nextLine());
-				break;
-			case 4:
-				System.out.print("Enter the new inventory ID: ");
-				result.inventoryId = Integer.parseInt(DatabaseInteractor.scanner.nextLine());
-				break;
-			case 5:
-				System.out.print("Enter the new type: ");
-				result.type = DatabaseInteractor.scanner.nextLine();
-				break;
-			case 6:
-				System.out.print("Enter the new description: ");
-				result.description = DatabaseInteractor.scanner.nextLine();
-				break;
-			case 7:
-				System.out.print("Enter the new manufacturer: ");
-				result.manufacturer = DatabaseInteractor.scanner.nextLine();
-				break;
-			case 8:
-				System.out.print("Enter the new year: ");
-				result.year = Integer.parseInt(DatabaseInteractor.scanner.nextLine());
-				break;
-			case 9:
-				System.out.print("Enter the new size (m^3): ");
-				result.size = Float.parseFloat(DatabaseInteractor.scanner.nextLine());
-				break;
-			case 10:
-				System.out.print("Enter the new weight (kg): ");
-				result.weight = Float.parseFloat(DatabaseInteractor.scanner.nextLine());
-				break;
-			case 11:
-				System.out.print("Enter the new warranty expiration date (YYYY-MM-DD): ");
-				result.warrantyExpirationDate = LocalDate.parse(DatabaseInteractor.scanner.nextLine());
-				break;
-			case 12:
-				System.out.print("Enter the new location code: ");
-				result.locationCode = DatabaseInteractor.scanner.nextLine();
-				break;
-			case 13:
-				System.out.print("Enter the new rental status (0 for available, 1 for rented out): ");
-				result.rentalStatus = Integer.parseInt(DatabaseInteractor.scanner.nextLine());
-				break;
-			default:
-				System.out.println("Invalid attribute number");
-				break;
-			}
+			if (success)
+				System.out.println("Success!");
+			else
+				System.out.println("Failure!");
 		} else {
 			System.out.println("Serial number not found among equipment");
 		}
@@ -150,130 +123,214 @@ public class EditHelper {
 	}
 	
 	public static void EditMember() {
-		Member result = null;
-		System.out.print("Enter the last name of the member: ");
-		String searchTerm = DatabaseInteractor.scanner.nextLine();
+		System.out.print("Enter the user ID of the member: ");
+		int userID = DatabaseInteractor.scanner.nextInt();
+
+		ResultSet result = DatabaseInteractor.db.selectMemberByUserID(userID);
 		
-		boolean resultFound = false;
-		for(Member x : DatabaseInteractor.members) {
-			if(x.lName.contains(searchTerm)) {
-				resultFound = true; 
-				result = x;
-				break;
+		if(result != null) {
+			try {
+				ResultSetMetaData rsmd = result.getMetaData();
+				int columnCount = rsmd.getColumnCount();
+				for (int i = 1; i <= columnCount; i++) {
+					String value = rsmd.getColumnName(i);
+					System.out.print(value);
+					if (i < columnCount) {
+						System.out.print(", ");
+					}
+				}
+				System.out.print("\n");
+				while (result.next()) {
+					for (int i = 1; i <= columnCount; i++) {
+						String columnValue = result.getString(i);
+						System.out.print(columnValue);
+						if (i < columnCount) {
+							System.out.print(", ");
+						}
+					}
+					System.out.print("\n");
+				}
+			} catch (SQLException e) {
+				
+				System.out.println(e.getMessage());
 			}
-		}
-		
-		if(resultFound) {
-			System.out.println("Result found, enter the number corresponding to the attribute to edit:");
-			System.out.println("1. User ID: " + result.userId);
-			System.out.println("2. Last Name: " + result.lName);
-			System.out.println("3. First Name: " + result.fName);
-			System.out.println("4. Address: " + result.address);
-			System.out.println("5. Phone Number: " + result.phoneNumber);
-			System.out.println("6. Email: " + result.email);
-			System.out.println("7. Start Date: " + result.startDate);
-			
+
+			System.out.print("Select number corresponding to the column of the attribute to edit: ");
 			int attributeSelection = DatabaseInteractor.scanner.nextInt();
+			String query;
 			DatabaseInteractor.scanner.nextLine();
+			boolean success = false;
 			switch(attributeSelection) {
-			case 1:
-				System.out.print("Enter the new user ID: ");
-				result.userId = Integer.parseInt(DatabaseInteractor.scanner.nextLine());
-				break;
-			case 2:
-				System.out.print("Enter the new last name: ");
-				result.lName = DatabaseInteractor.scanner.nextLine();
-				break;
-			case 3:
-				System.out.print("Enter the new first name: ");
-				result.fName = DatabaseInteractor.scanner.nextLine();
-				break;
-			case 4:
-				System.out.print("Enter the new address: ");
-				result.address = DatabaseInteractor.scanner.nextLine();
-				break;
-			case 5:
-				System.out.print("Enter the new phone number: ");
-				result.phoneNumber = DatabaseInteractor.scanner.nextLine();
-				break;
-			case 6:
-				System.out.print("Enter the new email: ");
-				result.email = DatabaseInteractor.scanner.nextLine();
-				break;
-			case 7:
-				System.out.print("Enter the new start date (YYYY-MM-DD): ");
-				result.startDate = LocalDate.parse(DatabaseInteractor.scanner.nextLine());
-				break;
-			default:
-				System.out.println("Invalid attribute number");
-				break;
+				case 1:
+					// set start date of member to current date
+					System.out.print("Enter new member user ID: ");
+					int newUserID = DatabaseInteractor.scanner.nextInt();
+					
+					query = "UPDATE MEMBER SET userID=? WHERE userID=?";
+					success = DatabaseInteractor.db.updateMemberByUserID(query, userID, newUserID);
+					break;
+				case 2:
+					System.out.print("Enter new member first name: ");
+					String newFName = DatabaseInteractor.scanner.nextLine();
+
+					query = "UPDATE MEMBER SET fName=? WHERE userID=?";
+					success = DatabaseInteractor.db.updateMemberByUserID(query, userID, newFName);
+					break;
+				case 3:
+					// get name of member
+					System.out.print("Enter new member last name: ");
+					String newLName = DatabaseInteractor.scanner.nextLine();
+
+					query = "UPDATE MEMBER SET lName=? WHERE userID=?";
+					success = DatabaseInteractor.db.updateMemberByUserID(query, userID, newLName);
+					break;
+				case 4:
+					// get address of member
+					System.out.print("Enter new member address: ");
+					String newAddress = DatabaseInteractor.scanner.nextLine();
+
+					query = "UPDATE MEMBER SET address=? WHERE userID=?";
+					success = DatabaseInteractor.db.updateMemberByUserID(query, userID, newAddress);
+					break;
+				case 5:
+					// get phone number of member
+					System.out.print("Enter new member phone number: ");
+					String newPhoneNum = DatabaseInteractor.scanner.nextLine();
+
+					query = "UPDATE MEMBER SET phoneNumb=? WHERE userID=?";
+					success = DatabaseInteractor.db.updateMemberByUserID(query, userID, newPhoneNum);
+					break;
+				case 6:
+					// get email of member 
+					System.out.print("Enter new member email: ");
+					String newEmail = DatabaseInteractor.scanner.nextLine();
+
+					query = "UPDATE MEMBER SET email=? WHERE userID=?";
+					success = DatabaseInteractor.db.updateMemberByUserID(query, userID, newEmail);
+					break;
+				case 7:
+					// set start date of member to current date
+					System.out.print("Enter new member start date (yyyy-mm-dd): ");
+					LocalDate newDate = LocalDate.parse(DatabaseInteractor.scanner.nextLine());
+					
+					query = "UPDATE MEMBER SET startDate=? WHERE userID=?";
+					success = DatabaseInteractor.db.updateMemberByUserID(query, userID, newDate);
+					break;
+				default:
+					System.out.println("Invalid attribute number");
+					break;
 			}
+			
+			if (success)
+				System.out.println("Success!");
+			else
+				System.out.println("Failure!");
 		} else {
-			System.out.println("Last name not found among members");
+			System.out.println("Serial number not found among equipment");
 		}
 		
 		DatabaseInteractor.scanner.nextLine();
 	}
 	
 	public static void EditWarehouse() {
-		Warehouse result = null;
-		System.out.print("Enter the address or the city of the warehouse: ");
-		String searchTerm = DatabaseInteractor.scanner.nextLine();
+		System.out.print("Enter the address of warehouse: ");
+		int address = DatabaseInteractor.scanner.nextInt();
+
+		ResultSet result = DatabaseInteractor.db.selectMemberByUserID(address);
 		
-		boolean resultFound = false;
-		for(Warehouse x : DatabaseInteractor.warehouses) {
-			if(x.address.contains(searchTerm) || x.city.contains(searchTerm)) {
-				resultFound = true; 
-				result = x;
-				break;
+		if(result != null) {
+			try {
+				ResultSetMetaData rsmd = result.getMetaData();
+				int columnCount = rsmd.getColumnCount();
+				for (int i = 1; i <= columnCount; i++) {
+					String value = rsmd.getColumnName(i);
+					System.out.print(value);
+					if (i < columnCount) {
+						System.out.print(", ");
+					}
+				}
+				System.out.print("\n");
+				while (result.next()) {
+					for (int i = 1; i <= columnCount; i++) {
+						String columnValue = result.getString(i);
+						System.out.print(columnValue);
+						if (i < columnCount) {
+							System.out.print(", ");
+						}
+					}
+					System.out.print("\n");
+				}
+			} catch (SQLException e) {
+				
+				System.out.println(e.getMessage());
 			}
-		}
-		
-		if(resultFound) {
-			System.out.println("Result found, enter the number corresponding to the attribute to edit:");
-			System.out.println("1. City: " + result.city);
-			System.out.println("2. Address: " + result.address);
-			System.out.println("3. Drone Cap: " + result.droneCap);
-			System.out.println("4. Storage Cap: " + result.storageCap);
-			System.out.println("5. Phone Number: " + result.phoneNumber);
-			System.out.println("6. Manager Name: " + result.managerName);
-			
+
+			System.out.print("Select number corresponding to the column of the attribute to edit: ");
 			int attributeSelection = DatabaseInteractor.scanner.nextInt();
+			String query;
 			DatabaseInteractor.scanner.nextLine();
+			boolean success = false;
 			switch(attributeSelection) {
-			case 1:
-				System.out.print("Enter the new city: ");
-				result.city = DatabaseInteractor.scanner.nextLine();
-				break;
-			case 2:
-				System.out.print("Enter the new address: ");
-				result.address = DatabaseInteractor.scanner.nextLine();
-				break;
-			case 3:
-				System.out.print("Enter the new drone cap: ");
-				result.droneCap = Integer.parseInt(DatabaseInteractor.scanner.nextLine());
-				break;
-			case 4:
-				System.out.print("Enter the new storage cap: ");
-				result.storageCap = Integer.parseInt(DatabaseInteractor.scanner.nextLine());
-				break;
-			case 5:
-				System.out.print("Enter the new phone number: ");
-				result.phoneNumber = DatabaseInteractor.scanner.nextLine();
-				break;
-			case 6:
-				System.out.print("Enter the new manager name: ");
-				result.managerName = DatabaseInteractor.scanner.nextLine();
-				break;
-			default:
-				System.out.println("Invalid attribute number");
-				break;
+				case 1:
+					// get address of warehouse
+					System.out.print("Enter new warehouse address: ");
+					String newAddress = DatabaseInteractor.scanner.nextLine();
+	
+					query = "UPDATE WAREHOUSE SET address=? WHERE address=?";
+					success = DatabaseInteractor.db.updateMemberByUserID(query, address, newAddress);
+					break;
+				case 2:
+					// get city of warehouse
+					System.out.print("Enter new warehouse city: ");
+					String newWarehouseCity = DatabaseInteractor.scanner.nextLine();
+
+					query = "UPDATE WAREHOUSE SET city=? WHERE address=?";
+					success = DatabaseInteractor.db.updateMemberByUserID(query, address, newWarehouseCity);
+					break;
+				case 3:
+					// get drone cap of warehouse
+					System.out.print("Enter new warehouse drone cap: ");
+					int newDroneCap = DatabaseInteractor.scanner.nextInt();
+
+					query = "UPDATE WAREHOUSE SET droneCap=? WHERE address=?";
+					success = DatabaseInteractor.db.updateMemberByUserID(query, address, newDroneCap);
+					break;
+				case 4:
+					// get storage cap of warehouse 
+					System.out.print("Enter new warehouse storage cap: ");
+					int newStorageCap = DatabaseInteractor.scanner.nextInt();
+
+					query = "UPDATE WAREHOUSE SET storageCap=? WHERE address=?";
+					success = DatabaseInteractor.db.updateMemberByUserID(query, address, newStorageCap);
+					break;
+				case 5:
+					// get phone number of warehouse
+					System.out.print("Enter new warehouse phone number: ");
+					String newPhoneNum = DatabaseInteractor.scanner.nextLine();
+
+					query = "UPDATE WAREHOUSE SET phoneNo=? WHERE address=?";
+					success = DatabaseInteractor.db.updateMemberByUserID(query, address, newPhoneNum);
+					break;
+				case 6:
+					// get manager name of warehouse
+					System.out.print("Enter new warehouse manager name: ");
+					String newManagerName = DatabaseInteractor.scanner.nextLine();
+
+					query = "UPDATE WAREHOUSE SET managerName=? WHERE address=?";
+					success = DatabaseInteractor.db.updateMemberByUserID(query, address, newManagerName);
+					break;
+				default:
+					System.out.println("Invalid attribute number");
+					break;
 			}
+			
+			if (success)
+				System.out.println("Success!");
+			else
+				System.out.println("Failure!");
 		} else {
-			System.out.println("Last name not found among warehouses");
+			System.out.println("Serial number not found among equipment");
 		}
-		
-		DatabaseInteractor.scanner.nextLine();
 	}
 }
 
