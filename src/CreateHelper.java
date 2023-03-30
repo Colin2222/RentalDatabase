@@ -10,9 +10,7 @@ import RecordTypes.Member;
 import RecordTypes.Warehouse;
 
 public class CreateHelper {
-	private static String addEquipmentSql = "INSERT INTO EQUIPMENT VALUES (?, ?, ?);";
-	
-	public static void AddMenu(Connection conn) {
+	public static void AddMenu() {
 		Integer choice = 0;
 		boolean seekingResponse = true; 
 		while(seekingResponse) {
@@ -52,496 +50,385 @@ public class CreateHelper {
 		case 0:
 			break;
 		case 1:
-			AddEquipment(conn);
+			AddEquipment();
 			break;
 		case 2:
-			AddMember(conn);
+			AddMember();
 			break;
 		case 3:
-			AddWarehouse(conn);
+			AddWarehouse();
 			break;
 		case 4:
-			AddReview(conn);
+			AddReview();
 			break;
 		case 5:
-			AddDrone(conn);
+			AddDrone();
 			break;
 		case 6:
-			AddEquipmentDelivery(conn);
+			AddEquipmentDelivery();
 			break;
 		case 7:
-			AddDroneFleet(conn);
+			AddDroneFleet();
 			break;
 		case 8:
-			AddDroneTech(conn);
+			AddDroneTech();
 			break;
 		case 9:
-			AddDroneRepair(conn);
+			AddDroneRepair();
 			break;
 		case 10:
-			AddInventoryOrder(conn);
+			AddInventoryOrder();
 			break;
 		case 11:
-			AddSupplier(conn);
+			AddSupplier();
 			break;
 		case 12:
-			AddInventoryItem(conn);
+			AddInventoryItem();
 			break;
 		case 13:
-			AddItemModel(conn);
+			AddItemModel();
 			break;
 		case 14:
-			AddEquipmentRental(conn);
+			AddEquipmentRental();
 			break;
 		}
 	}
 	
-	public static void AddMember(Connection conn) {
-		try {
-			PreparedStatement stmt = conn.prepareStatement(addEquipmentSql);
-			
-			// get name of member
-			System.out.print("Member last name: ");
-			stmt.setString(3, DatabaseInteractor.scanner.nextLine());
-			System.out.print("First name: ");
-			stmt.setString(2, DatabaseInteractor.scanner.nextLine());
-			
-			// get address of member
-			System.out.print("Address: ");
-			stmt.setString(4, DatabaseInteractor.scanner.nextLine());
-			
-			// get phone number of member
-			System.out.print("Phone number: ");
-			stmt.setString(5, DatabaseInteractor.scanner.nextLine());
-			
-			// get email of member 
-			System.out.print("Email: ");
-			stmt.setString(6, DatabaseInteractor.scanner.nextLine());
-			
-			// set start date of member to current date
-			stmt.setDate(7, java.sql.Date.valueOf(LocalDate.now()));
-			
-			// set procedural values (user ID)
-			stmt.setInt(1, ++(DatabaseInteractor.maxUserId));
-			
-			stmt.executeUpdate();
-			
-			System.out.println("Addition successful");
-			DatabaseInteractor.scanner.nextLine();
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
+	public static void AddMember() {
+		// get name of member
+		System.out.print("Member last name: ");
+		String lName = DatabaseInteractor.scanner.nextLine();
+		
+		System.out.print("First name: ");
+		String fName = DatabaseInteractor.scanner.nextLine();
+		
+		// get address of member
+		System.out.print("Address: ");
+		String address = DatabaseInteractor.scanner.nextLine();
+		
+		// get phone number of member
+		System.out.print("Phone number: ");
+		String phoneNum = DatabaseInteractor.scanner.nextLine();
+		
+		// get email of member 
+		System.out.print("Email: ");
+		String email = DatabaseInteractor.scanner.nextLine();
+		
+		// set start date of member to current date
+		LocalDate date = LocalDate.now();
+		
+		// set procedural values (user ID)
+		int userID = ++(DatabaseInteractor.maxUserId);
+		
+		DatabaseInteractor.scanner.nextLine();
+		DatabaseInteractor.db.insertMember(lName, fName, address, phoneNum, email, date, userID);
 	}
 	
-	public static void AddWarehouse(Connection conn) {
-		try {
-			PreparedStatement stmt = conn.prepareStatement(addEquipmentSql);
-			
-			// get city of warehouse
-			System.out.print("Warehouse city: ");
-			stmt.setString(2, DatabaseInteractor.scanner.nextLine());
-			
-			// get address of warehouse
-			System.out.print("Address: ");
-			stmt.setString(1, DatabaseInteractor.scanner.nextLine());
-			
-			// get manager name of warehouse
-			System.out.print("Manager name: ");
-			stmt.setString(6, DatabaseInteractor.scanner.nextLine());
-			
-			// get phone number of warehouse
-			System.out.print("Phone number: ");
-			stmt.setString(5, DatabaseInteractor.scanner.nextLine());
-			
-			// get drone cap of warehouse
-			System.out.print("Drone cap: ");
-			stmt.setInt(3, DatabaseInteractor.scanner.nextInt());
-			
-			// get storage cap of warehouse 
-			System.out.print("Storage cap: ");
-			stmt.setInt(4, DatabaseInteractor.scanner.nextInt());
-			
-			stmt.executeUpdate();
-			
-			System.out.println("Addition successful");
-			DatabaseInteractor.scanner.nextLine();
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
+	public static void AddWarehouse() {
+		// get city of warehouse
+		System.out.print("Warehouse city: ");
+		String warehouseCity = DatabaseInteractor.scanner.nextLine();
+		
+		// get address of warehouse
+		System.out.print("Address: ");
+		String address = DatabaseInteractor.scanner.nextLine();
+		
+		// get manager name of warehouse
+		System.out.print("Manager name: ");
+		String managerName = DatabaseInteractor.scanner.nextLine();
+		
+		// get phone number of warehouse
+		System.out.print("Phone number: ");
+		String phoneNum = DatabaseInteractor.scanner.nextLine();
+		
+		// get drone cap of warehouse
+		System.out.print("Drone cap: ");
+		int droneCap = DatabaseInteractor.scanner.nextInt();
+		
+		// get storage cap of warehouse 
+		System.out.print("Storage cap: ");
+		int storageCap = DatabaseInteractor.scanner.nextInt();
+		
+		DatabaseInteractor.scanner.nextLine();
+		DatabaseInteractor.db.insertWarehouse(warehouseCity, address, managerName, phoneNum, droneCap, storageCap);
 	}
 	
-	public static void AddDroneFleet(Connection conn) {
-		try {
-			PreparedStatement stmt = conn.prepareStatement(addEquipmentSql);
-			
-			// get id of fleet
-			System.out.print("Fleet ID: ");
-			stmt.setString(1, DatabaseInteractor.scanner.nextLine());
-			
-			// get distance coverage of fleet
-			System.out.print("Distance coverage (miles): ");
-			stmt.setFloat(2, DatabaseInteractor.scanner.nextFloat());
-			
-			// get max speed of fleet
-			System.out.print("Max speed (mph): ");
-			stmt.setFloat(3, DatabaseInteractor.scanner.nextFloat());
-			
-			// get weight cap of fleet
-			System.out.print("Weight cap (lbs): ");
-			stmt.setFloat(2, DatabaseInteractor.scanner.nextFloat());
-			
-			stmt.executeUpdate();
-			
-			System.out.println("Addition successful");
-			DatabaseInteractor.scanner.nextLine();
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
+	public static void AddDroneFleet() {
+		// get id of fleet
+		System.out.print("Fleet ID: ");
+		String fleetID = DatabaseInteractor.scanner.nextLine();
+		
+		// get distance coverage of fleet
+		System.out.print("Distance coverage (miles): ");
+		float distance = DatabaseInteractor.scanner.nextFloat();
+		
+		// get max speed of fleet
+		System.out.print("Max speed (mph): ");
+		float maxSpeed = DatabaseInteractor.scanner.nextFloat();
+		
+		// get weight cap of fleet
+		System.out.print("Weight cap (lbs): ");
+		float weightCap = DatabaseInteractor.scanner.nextFloat();
+		
+		DatabaseInteractor.scanner.nextLine();
+		DatabaseInteractor.db.insertDroneFleet(fleetID, distance, maxSpeed, weightCap);
 	}
 	
-	public static void AddDroneTech(Connection conn) {
-		try {
-			PreparedStatement stmt = conn.prepareStatement(addEquipmentSql);
-			
-			// get phone number of tech
-			System.out.print("Phone Number: ");
-			stmt.setString(1, DatabaseInteractor.scanner.nextLine());
-			
-			// get name of member
-			System.out.print("Tech last name: ");
-			stmt.setString(3, DatabaseInteractor.scanner.nextLine());
-			System.out.print("Tech first name: ");
-			stmt.setString(2, DatabaseInteractor.scanner.nextLine());
-			
-			// get email of tech
-			System.out.print("Email: ");
-			stmt.setString(4, DatabaseInteractor.scanner.nextLine());
-			
-			// get city of operation of tech
-			System.out.print("City: ");
-			stmt.setString(5, DatabaseInteractor.scanner.nextLine());
-			
-			// get website of tech
-			System.out.print("Website: ");
-			stmt.setString(6, DatabaseInteractor.scanner.nextLine());
-			
-			stmt.executeUpdate();
+	public static void AddDroneTech() {
+		// get phone number of tech
+		System.out.print("Phone Number: ");
+		String phoneNo = DatabaseInteractor.scanner.nextLine();
+		
+		// get name of member
+		System.out.print("Tech last name: ");
+		String techLName = DatabaseInteractor.scanner.nextLine();
+		System.out.print("Tech first name: ");
+		String techFName = DatabaseInteractor.scanner.nextLine();
+		
+		// get email of tech
+		System.out.print("Email: ");
+		String techEmail = DatabaseInteractor.scanner.nextLine();
+		
+		// get city of operation of tech
+		System.out.print("City: ");
+		String city = DatabaseInteractor.scanner.nextLine();
+		
+		// get website of tech
+		System.out.print("Website: ");
+		String website = DatabaseInteractor.scanner.nextLine();
+		
+		DatabaseInteractor.db.insertDroneTech(phoneNo, techLName, techFName, techEmail, city, website);
+	}
+	
+	public static void AddSupplier() {
+		// get website
+		System.out.print("Website: ");
+		String website = DatabaseInteractor.scanner.nextLine();
+		
+		// get name
+		System.out.print("Name: ");
+		String name = DatabaseInteractor.scanner.nextLine();
+		
+		// get address
+		System.out.print("Address: ");
+		String address = DatabaseInteractor.scanner.nextLine();
+		
+		// get city
+		System.out.print("Warehouse: ");
+		String warehouse = DatabaseInteractor.scanner.nextLine();
+		
+		// get phone number
+		System.out.print("Phone Number: ");
+		String phoneNo = DatabaseInteractor.scanner.nextLine();
+		
+		DatabaseInteractor.db.insertSupplier(website, name, address, warehouse, phoneNo);
+	}
+	
+	public static void AddItemModel() {
+		// get model no
+		System.out.print("Model No: ");
+		String modelNo = DatabaseInteractor.scanner.nextLine();
+		
+		// get name
+		System.out.print("Model Name: ");
+		String modelName = DatabaseInteractor.scanner.nextLine();
+		
+		// get description
+		System.out.print("Description: ");
+		String description = DatabaseInteractor.scanner.nextLine();
+		
+		// get website
+		System.out.print("Website: ");
+		String website = DatabaseInteractor.scanner.nextLine();
+		
+		// get type
+		System.out.print("Type: ");
+		String type = DatabaseInteractor.scanner.nextLine();
+		
+		// get year
+		System.out.print("Year: ");
+		int year = DatabaseInteractor.scanner.nextInt();
+		
+		// get size
+		System.out.print("Size: ");
+		float size = DatabaseInteractor.scanner.nextFloat();
+		
+		// get weight
+		System.out.print("Weight: ");
+		float weight = DatabaseInteractor.scanner.nextFloat();
+		
+		DatabaseInteractor.scanner.nextLine();
+		DatabaseInteractor.db.insertItemModel(modelNo, modelName, description, website, type, year, size, weight);
+	}
+	
+	public static void AddInventoryItem() {
+		// get serial no
+		System.out.print("Serial no: ");
+		String serialNo = DatabaseInteractor.scanner.nextLine();
+		
+		// get warehouse
+		System.out.print("Housing warehouse address: ");
+		String warehouseAddress = DatabaseInteractor.scanner.nextLine();
+		
+		// get order no
+		System.out.print("Inventory order no: ");
+		String invOrderID = DatabaseInteractor.scanner.nextLine();
+		
+		// get warranty expiration date
+		System.out.print("Warranty expiration date (yyyy-mm-dd): ");
+		LocalDate warrantyExpiryDate = LocalDate.parse(DatabaseInteractor.scanner.nextLine());
+		
+		// get order no
+		System.out.print("Model no: ");
+		String modelNo = DatabaseInteractor.scanner.nextLine();
+		
+		DatabaseInteractor.db.insertInventoryItem(serialNo, warehouseAddress, invOrderID, warrantyExpiryDate, modelNo);
+	}	
+	
+	public static void AddEquipment() {
+		// get serial no
+		System.out.print("Serial no: ");
+		String serialNo = DatabaseInteractor.scanner.nextLine();
+		
+		// get rental status
+		System.out.print("Rental status (Available/Unavailable): ");
+		String rentalStatus = DatabaseInteractor.scanner.nextLine();
+		
+		// get inventory id
+		System.out.print("Inventory id: ");
+		String invID = DatabaseInteractor.scanner.nextLine();
+		
+		DatabaseInteractor.db.insertEquipment(serialNo, rentalStatus, invID);
+	}
+	
+	public static void AddEquipmentRental() {
+		// get user id
+		System.out.print("Renting user id: ");
+		int userID = DatabaseInteractor.scanner.nextInt();
+		DatabaseInteractor.scanner.nextLine();
+		
+		// get equipment serial no
+		System.out.print("Equipment serial no: ");
+		String serialNo = DatabaseInteractor.scanner.nextLine();
+		
+		// get checkout date
+		System.out.print("Checkout date (yyyy-mm-dd): ");
+		LocalDate checkoutDate = LocalDate.parse(DatabaseInteractor.scanner.nextLine());
+		
+		// get return date
+		System.out.print("Return date (yyyy-mm-dd): ");
+		LocalDate returnDate = LocalDate.parse(DatabaseInteractor.scanner.nextLine());
+		
+		// get due date
+		System.out.print("Due date (yyyy-mm-dd): ");
+		LocalDate dueDate = LocalDate.parse(DatabaseInteractor.scanner.nextLine());
 
-			System.out.println("Addition successful");
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
+		DatabaseInteractor.db.insertEquipmentRental(userID, serialNo, checkoutDate, returnDate, dueDate);
 	}
 	
-	public static void AddSupplier(Connection conn) {
-		try {
-			PreparedStatement stmt = conn.prepareStatement(addEquipmentSql);
-			
-			// get website
-			System.out.print("Website: ");
-			stmt.setString(1, DatabaseInteractor.scanner.nextLine());
-			
-			// get name
-			System.out.print("Name: ");
-			stmt.setString(2, DatabaseInteractor.scanner.nextLine());
-			
-			// get address
-			System.out.print("Address: ");
-			stmt.setString(3, DatabaseInteractor.scanner.nextLine());
-			
-			// get city
-			System.out.print("Warehouse: ");
-			stmt.setString(4, DatabaseInteractor.scanner.nextLine());
-			
-			// get phone number
-			System.out.print("Phone Number: ");
-			stmt.setString(5, DatabaseInteractor.scanner.nextLine());
-			
-			stmt.executeUpdate();
-
-			System.out.println("Addition successful");
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
+	public static void AddDrone() {
+		// get serial no
+		System.out.print("Serial no: ");
+		String serialNo = DatabaseInteractor.scanner.nextLine();
+		
+		// get fleet id
+		System.out.print("Fleet ID: ");
+		String fleetID = DatabaseInteractor.scanner.nextLine();
+		
+		// get status
+		System.out.print("Availability (Available, Unavailable): ");
+		String availability = DatabaseInteractor.scanner.nextLine();
+		
+		DatabaseInteractor.db.insertDrone(serialNo, fleetID, availability);
 	}
 	
-	public static void AddItemModel(Connection conn) {
-		try {
-			PreparedStatement stmt = conn.prepareStatement(addEquipmentSql);
-			
-			// get model no
-			System.out.print("Model No: ");
-			stmt.setString(1, DatabaseInteractor.scanner.nextLine());
-			
-			// get name
-			System.out.print("Model Name: ");
-			stmt.setString(2, DatabaseInteractor.scanner.nextLine());
-			
-			// get description
-			System.out.print("Description: ");
-			stmt.setString(3, DatabaseInteractor.scanner.nextLine());
-			
-			// get website
-			System.out.print("Website: ");
-			stmt.setString(4, DatabaseInteractor.scanner.nextLine());
-			
-			// get type
-			System.out.print("Type: ");
-			stmt.setString(6, DatabaseInteractor.scanner.nextLine());
-			
-			// get year
-			System.out.print("Year: ");
-			stmt.setInt(5, DatabaseInteractor.scanner.nextInt());
-			
-			// get size
-			System.out.print("Size: ");
-			stmt.setFloat(7, DatabaseInteractor.scanner.nextFloat());
-			
-			// get weight
-			System.out.print("Weight: ");
-			stmt.setFloat(8, DatabaseInteractor.scanner.nextFloat());
-			
-			stmt.executeUpdate();
-
-			System.out.println("Addition successful");
-			DatabaseInteractor.scanner.nextLine();
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
+	public static void AddEquipmentDelivery() {
+		// get equipment serial no
+		System.out.print("Equipment serial no: ");
+		String equipSerialNo = DatabaseInteractor.scanner.nextLine();
+		
+		// get drone serial no
+		System.out.print("Drone serial no: ");
+		String droneSerialNo = DatabaseInteractor.scanner.nextLine();
+		
+		// get delivery date
+		System.out.print("delivery date (yyyy-mm-dd): ");
+		LocalDate deliveryDate = LocalDate.parse(DatabaseInteractor.scanner.nextLine());
+		
+		DatabaseInteractor.db.insertEquipmentDelivery(equipSerialNo, droneSerialNo, deliveryDate);
 	}
 	
-	public static void AddInventoryItem(Connection conn) {
-		try {
-			PreparedStatement stmt = conn.prepareStatement(addEquipmentSql);
-			
-			// get serial no
-			System.out.print("Serial no: ");
-			stmt.setString(2, DatabaseInteractor.scanner.nextLine());
-			
-			// get warehouse
-			System.out.print("Housing warehouse address: ");
-			stmt.setString(1, DatabaseInteractor.scanner.nextLine());
-			
-			// get order no
-			System.out.print("Inventory order no: ");
-			stmt.setString(3, DatabaseInteractor.scanner.nextLine());
-			
-			// get warranty expiration date
-			System.out.print("Warranty expiration date (yyyy-mm-dd): ");
-			stmt.setDate(4, java.sql.Date.valueOf(DatabaseInteractor.scanner.nextLine()));
-			
-			// get order no
-			System.out.print("Model no: ");
-			stmt.setString(5, DatabaseInteractor.scanner.nextLine());
-			
-			stmt.executeUpdate();
-
-			System.out.println("Addition successful");
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
+	public static void AddReview() {
+		// get equipment serial no
+		System.out.print("Equipment serial no: ");
+		String serialNo = DatabaseInteractor.scanner.nextLine();
+		
+		// get review id
+		System.out.print("Review ID: ");
+		String reviewID = DatabaseInteractor.scanner.nextLine();
+		
+		// get user id
+		System.out.print("User id: ");
+		int userID = DatabaseInteractor.scanner.nextInt();
+		DatabaseInteractor.scanner.nextLine();
+		
+		// get comment
+		System.out.print("Comment: ");
+		String comment = DatabaseInteractor.scanner.nextLine();
+		
+		// get rating
+		System.out.print("Rating: ");
+		String rating = DatabaseInteractor.scanner.nextLine();
+		
+		DatabaseInteractor.db.insertReview(serialNo, reviewID, userID, comment, rating);
 	}
 	
-	public static void AddEquipment(Connection conn) {
-		try {
-			PreparedStatement stmt = conn.prepareStatement(addEquipmentSql);
-			
-			// get serial no
-			System.out.print("Serial no: ");
-			stmt.setString(1, DatabaseInteractor.scanner.nextLine());
-			
-			// get rental status
-			System.out.print("Rental status (Available/Unavailable): ");
-			stmt.setString(2, DatabaseInteractor.scanner.nextLine());
-			
-			// get inventory id
-			System.out.print("Inventory id: ");
-			stmt.setString(3, DatabaseInteractor.scanner.nextLine());
-			
-			stmt.executeUpdate();
-
-			System.out.println("Addition successful");
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
+	public static void AddInventoryOrder() {
+		// get warehouse address
+		System.out.print("Warehouse address: ");
+		String warehouseAddress = DatabaseInteractor.scanner.nextLine();
+		
+		// get supplier website
+		System.out.print("Supplier website: ");
+		String supplierWebsite = DatabaseInteractor.scanner.nextLine();
+		
+		// get order id
+		System.out.print("Order id: ");
+		String orderId = DatabaseInteractor.scanner.nextLine();
+		
+		// get model no
+		System.out.print("Model no: ");
+		String modelNo = DatabaseInteractor.scanner.nextLine();
+		
+		// get number ordered
+		System.out.print("Number ordered: ");
+		float quantity = DatabaseInteractor.scanner.nextFloat();
+		DatabaseInteractor.scanner.nextLine();
+		
+		// get estimated arrival date
+		System.out.print("Estimated arrival date (yyyy-mm-dd): ");
+		LocalDate ead = LocalDate.parse(DatabaseInteractor.scanner.nextLine());
+		
+		// get estimated arrival date
+		System.out.print("Actual arrival date (yyyy-mm-dd): ");
+		LocalDate aad = LocalDate.parse(DatabaseInteractor.scanner.nextLine());
+		
+		DatabaseInteractor.db.insertInventoryOrder(warehouseAddress, supplierWebsite, orderId, modelNo, quantity, ead, aad);
 	}
 	
-	public static void AddEquipmentRental(Connection conn) {
-		try {
-			PreparedStatement stmt = conn.prepareStatement(addEquipmentSql);
-			
-			// get user id
-			System.out.print("Renting user id: ");
-			stmt.setInt(1, DatabaseInteractor.scanner.nextInt());
-			DatabaseInteractor.scanner.nextLine();
-			
-			// get equipment serial no
-			System.out.print("Equipment serial no: ");
-			stmt.setString(2, DatabaseInteractor.scanner.nextLine());
-			
-			// get checkout date
-			System.out.print("Checkout date (yyyy-mm-dd): ");
-			stmt.setDate(3, java.sql.Date.valueOf(DatabaseInteractor.scanner.nextLine()));
-			
-			// get return date
-			System.out.print("Return date (yyyy-mm-dd): ");
-			stmt.setDate(4, java.sql.Date.valueOf(DatabaseInteractor.scanner.nextLine()));
-			
-			// get due date
-			System.out.print("Due date (yyyy-mm-dd): ");
-			stmt.setDate(5, java.sql.Date.valueOf(DatabaseInteractor.scanner.nextLine()));
-			
-			stmt.executeUpdate();
-
-			System.out.println("Addition successful");
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-	}
-	
-	public static void AddDrone(Connection conn) {
-		try {
-			PreparedStatement stmt = conn.prepareStatement(addEquipmentSql);
-			
-			// get serial no
-			System.out.print("Serial no: ");
-			stmt.setString(1, DatabaseInteractor.scanner.nextLine());
-			
-			// get fleet id
-			System.out.print("Fleet ID: ");
-			stmt.setString(2, DatabaseInteractor.scanner.nextLine());
-			
-			// get status
-			System.out.print("Availability (Available, Unavailable): ");
-			stmt.setString(3, DatabaseInteractor.scanner.nextLine());
-			
-			stmt.executeUpdate();
-
-			System.out.println("Addition successful");
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-	}
-	
-	public static void AddEquipmentDelivery(Connection conn) {
-		try {
-			PreparedStatement stmt = conn.prepareStatement(addEquipmentSql);
-			
-			// get equipment serial no
-			System.out.print("Equipment serial no: ");
-			stmt.setString(1, DatabaseInteractor.scanner.nextLine());
-			
-			// get drone serial no
-			System.out.print("Drone serial no: ");
-			stmt.setString(2, DatabaseInteractor.scanner.nextLine());
-			
-			// get delivery date
-			System.out.print("delivery date (yyyy-mm-dd): ");
-			stmt.setDate(3, java.sql.Date.valueOf(DatabaseInteractor.scanner.nextLine()));
-			
-			stmt.executeUpdate();
-
-			System.out.println("Addition successful");
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-	}
-	
-	public static void AddReview(Connection conn) {
-		try {
-			PreparedStatement stmt = conn.prepareStatement(addEquipmentSql);
-			
-			// get equipment serial no
-			System.out.print("Equipment serial no: ");
-			stmt.setString(1, DatabaseInteractor.scanner.nextLine());
-			
-			// get review id
-			System.out.print("Review ID: ");
-			stmt.setString(2, DatabaseInteractor.scanner.nextLine());
-			
-			// get user id
-			System.out.print("User id: ");
-			stmt.setInt(3, DatabaseInteractor.scanner.nextInt());
-			DatabaseInteractor.scanner.nextLine();
-			
-			// get comment
-			System.out.print("Comment: ");
-			stmt.setString(4, DatabaseInteractor.scanner.nextLine());
-			
-			// get rating
-			System.out.print("Comment: ");
-			stmt.setString(5, DatabaseInteractor.scanner.nextLine());
-			
-			stmt.executeUpdate();
-
-			System.out.println("Addition successful");
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-	}
-	
-	public static void AddInventoryOrder(Connection conn) {
-		try {
-			PreparedStatement stmt = conn.prepareStatement(addEquipmentSql);
-			
-			// get warehouse address
-			System.out.print("Warehouse address: ");
-			stmt.setString(1, DatabaseInteractor.scanner.nextLine());
-			
-			// get supplier website
-			System.out.print("Supplier website: ");
-			stmt.setString(2, DatabaseInteractor.scanner.nextLine());
-			
-			// get order id
-			System.out.print("Order id: ");
-			stmt.setString(3, DatabaseInteractor.scanner.nextLine());
-			
-			// get model no
-			System.out.print("Model no: ");
-			stmt.setString(4, DatabaseInteractor.scanner.nextLine());
-			
-			// get number ordered
-			System.out.print("Number ordered: ");
-			stmt.setFloat(5, DatabaseInteractor.scanner.nextFloat());
-			DatabaseInteractor.scanner.nextLine();
-			
-			// get estimated arrival date
-			System.out.print("Estimated arrival date (yyyy-mm-dd): ");
-			stmt.setDate(6, java.sql.Date.valueOf(DatabaseInteractor.scanner.nextLine()));
-			
-			// get estimated arrival date
-			System.out.print("Actual arrival date (yyyy-mm-dd): ");
-			stmt.setDate(7, java.sql.Date.valueOf(DatabaseInteractor.scanner.nextLine()));
-			
-			stmt.executeUpdate();
-
-			System.out.println("Addition successful");
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-	}
-	
-	public static void AddDroneRepair(Connection conn) {
-		try {
-			PreparedStatement stmt = conn.prepareStatement(addEquipmentSql);
-			
-			// get drone serial number
-			System.out.print("Drone serial number: ");
-			stmt.setString(1, DatabaseInteractor.scanner.nextLine());
-			
-			// get technician phone number
-			System.out.print("Technician phone number: ");
-			stmt.setString(2, DatabaseInteractor.scanner.nextLine());
-			
-			// get date
-			System.out.print("Date: ");
-			stmt.setDate(3, java.sql.Date.valueOf(DatabaseInteractor.scanner.nextLine()));
-			
-			stmt.executeUpdate();
-
-			System.out.println("Addition successful");
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
+	public static void AddDroneRepair() {
+		// get drone serial number
+		System.out.print("Drone serial number: ");
+		String droneSerialNo = DatabaseInteractor.scanner.nextLine();
+		
+		// get technician phone number
+		System.out.print("Technician phone number: ");
+		String techPhoneNo = DatabaseInteractor.scanner.nextLine();
+		
+		// get date
+		System.out.print("Date: ");
+		LocalDate date = LocalDate.parse(DatabaseInteractor.scanner.nextLine());
+		
+		DatabaseInteractor.db.insertDroneRepair(droneSerialNo, techPhoneNo, date);
 	}
 }
