@@ -34,6 +34,42 @@ public class Database {
 	private static String deleteWarehouseByAddressSQL = "DELETE FROM WAREHOUSE WHERE address=?;";
 	private static String deleteEquipmentBySerialNoSQL = "DELETE FROM EQUIPMENT WHERE serialNo=?;";
 	
+	private static String memberRentalReportSql = "SELECT count(*) " + 
+			"FROM MEMBER AS M, EQUIPMENT_RENTAL AS R " + 
+			"WHERE M.UserID = R.UserID " + 
+			"AND M.UserID = ?;";
+	private static String mostPopularItemReportSql = "SELECT ModelName, MAX(rental_total) " + 
+			"FROM  (SELECT ModelName, COUNT(*) as rental_total " + 
+			"    FROM EQUIPMENT, EQUIPMENT_RENTAL, INVENTORY_ITEM, ITEM_MODEL " + 
+			"    WHERE EQUIPMENT.SerialNo = EQUIPMENT_RENTAL.EquipmentSerialNo " + 
+			"    AND EQUIPMENT.SerialNo = INVENTORY_ITEM.SerialNo " + 
+			"    AND INVENTORY_ITEM.ModelNo = ITEM_MODEL.ModelNo " + 
+			"    GROUP BY ITEM_MODEL.ModelNo);";
+	private static String mostPopularManufacturerReportSql = "SELECT SupplierName, MAX(rental_total) " + 
+			"FROM (SELECT SupplierName, COUNT(*) as rental_total " + 
+			"    FROM EQUIPMENT, EQUIPMENT_RENTAL, INVENTORY_ITEM, ITEM_MODEL, SUPPLIER " + 
+			"    WHERE EQUIPMENT.SerialNo = EQUIPMENT_RENTAL.EquipmentSerialNo " + 
+			"    AND EQUIPMENT.SerialNo = INVENTORY_ITEM.SerialNo " + 
+			"    AND INVENTORY_ITEM.ModelNo = ITEM_MODEL.ModelNo " + 
+			"    AND ITEM_MODEL.MWebsite = SUPPLIER.Website " + 
+			"    GROUP BY SUPPLIER.Website);";
+	private static String mostPopularDroneReportSql = "SELECT SerialNo, MAX(deliv_total) FROM (" +
+			"SELECT SerialNo, COUNT(*) as deliv_total" + 
+			"FROM DRONE, EQUIPMENT_DELIVERY" + 
+			"WHERE DRONE.SerialNo = EQUIPMENT_DELIVERY.DroneSerialNo" + 
+			"GROUP BY DRONE.SerialNo" + 
+			"ORDER BY deliv_total DESC);";
+	
+	private static String mostActiveMemberReportSql = "SELECT UserID, FName, LName, MAX(rental_total) " + 
+			"FROM (SELECT EQUIPMENT_RENTAL.UserID, MEMBER.LName, MEMBER.FName, COUNT(*) as rental_total " + 
+			"    FROM EQUIPMENT_RENTAL, MEMBER " + 
+			"    WHERE EQUIPMENT_RENTAL.UserID = MEMBER.UserID " + 
+			"    GROUP BY EQUIPMENT_RENTAL.UserID);";
+	
+	private static String typeAndYearReportSql = "SELECT ModelName, Description " + 
+			"FROM ITEM_MODEL AS M " + 
+			"WHERE M.Type = ? AND M.Year < ?;";
+	
     public Database(String databaseFileName) {
         /**
          * The "Connection String" or "Connection URL".
@@ -530,6 +566,87 @@ public class Database {
 		} catch (SQLException e ){
 			System.out.println(e.getMessage());
 			return false;
+		}
+	}
+	
+	public ResultSet reportMemberRentalTotal(int userID) {
+		try {
+			PreparedStatement stmt = this.conn.prepareStatement(memberRentalReportSql);
+			stmt.setInt(1, userID);
+			
+			ResultSet res = stmt.executeQuery();
+			return res;
+			
+		} catch (SQLException e ){
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+	
+	public ResultSet reportMostPopularItem() {
+		try {
+			PreparedStatement stmt = this.conn.prepareStatement(mostPopularItemReportSql);
+			
+			ResultSet res = stmt.executeQuery();
+			return res;
+			
+		} catch (SQLException e ){
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+	
+	public ResultSet reportMostPopularManufacturer() {
+		try {
+			PreparedStatement stmt = this.conn.prepareStatement(mostPopularManufacturerReportSql);
+			
+			ResultSet res = stmt.executeQuery();
+			return res;
+			
+		} catch (SQLException e ){
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+	
+	public ResultSet reportMostPopularDrone() {
+		try {
+			PreparedStatement stmt = this.conn.prepareStatement(mostPopularDroneReportSql);
+			
+			ResultSet res = stmt.executeQuery();
+			return res;
+			
+		} catch (SQLException e ){
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+	
+	public ResultSet reportMostActiveMember() {
+		try {
+			PreparedStatement stmt = this.conn.prepareStatement(mostActiveMemberReportSql);
+			
+			ResultSet res = stmt.executeQuery();
+			return res;
+			
+		} catch (SQLException e ){
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+	
+	public ResultSet reportByTypeAndYear(String type, int year) {
+		try {
+			PreparedStatement stmt = this.conn.prepareStatement(typeAndYearReportSql);
+			stmt.setString(1, type);
+			stmt.setInt(2, year);
+			
+			ResultSet res = stmt.executeQuery();
+			return res;
+			
+		} catch (SQLException e ){
+			System.out.println(e.getMessage());
+			return null;
 		}
 	}
 }
