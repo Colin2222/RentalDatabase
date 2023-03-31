@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 public class Database {
     private Connection conn;
+    private static String sqlGetMaxUserID = "SELECT MAX(UserID) FROM MEMBER";
 	private static String sqlInsertMember = "INSERT INTO MEMBER VALUES (?, ?, ?, ?, ?, ?, ?);";
 	private static String sqlInsertWarehouse = "INSERT INTO WAREHOUSE VALUES (?, ?, ?, ?, ?, ?);";
 	private static String sqlInsertDroneFleet = "INSERT INTO DRONE_FLEET VALUES (?, ?, ?, ?);";
@@ -60,6 +61,24 @@ public class Database {
             System.out
                     .println("There was a problem connecting to the database.");
         }
+        
+        // set the maximum member user id value based on existing database values to prevent overlap
+        try {
+			PreparedStatement stmt = this.conn.prepareStatement(sqlGetMaxUserID);
+			ResultSet rSet = stmt.executeQuery();
+			DatabaseInteractor.maxUserId = rSet.getInt(1);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+    }
+    
+    public void closeConnection() {
+    	try {
+			this.conn.close();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			System.out.println("There was a problem while closing the database connection.");
+		}
     }
 
     public boolean insertMember(String lName, String fName, String address, String phoneNum, String email, LocalDate date, int userID) {

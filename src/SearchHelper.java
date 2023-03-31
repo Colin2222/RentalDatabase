@@ -3,9 +3,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 public class SearchHelper {
-	public static Record SearchMenu() {
+	public static void SearchMenu() {
 		Integer choice = 0;
-		Record result = null;
 		boolean seekingResponse = true; 
 		while(seekingResponse) {
 			System.out.println("Enter the input corresponding to which type you would like to search for:");
@@ -44,8 +43,6 @@ public class SearchHelper {
 			SearchWarehouse();
 			break;
 		}
-		
-		return result;
 	}
 	
 	public static void SearchEquipment() {

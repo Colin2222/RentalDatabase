@@ -1,3 +1,4 @@
+import java.sql.PreparedStatement;
 import java.util.Scanner;
 
 public class DatabaseInteractor {
@@ -5,15 +6,15 @@ public class DatabaseInteractor {
 	
 	public static Scanner scanner;
 	public static Database db;
-	public static int maxSerialNumber = 0;
-	public static int maxInventoryId = 0;
 	public static int maxUserId = 18;
 	
 	public static void main(String[] args)
 	{
 		scanner = new Scanner(System.in);
 		db = new Database(DATABASE_FP);
+		
 		TopLayerMenu();
+		db.closeConnection();
 	}
 	
 	private static void TopLayerMenu() {
