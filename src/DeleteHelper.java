@@ -70,7 +70,7 @@ public class DeleteHelper {
 		System.out.print("Enter the address of the warehouse: ");
 		String address = DatabaseInteractor.scanner.nextLine();
 		
-		boolean success = DatabaseInteractor.db.deleteEquipmentBySerialNo(address);
+		boolean success = DatabaseInteractor.db.deleteWarehouseByAddress(address);
 		
 		if (success)
 			System.out.println("Success!");
