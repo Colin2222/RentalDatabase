@@ -64,14 +64,9 @@ public class DatabaseInteractor {
 			TopLayerMenu();
 			break;
 		case 5:
-			ReportsMenu();
+			ReportHelper.ReportMenu();
 			TopLayerMenu();
 			break;
 		}
-	}
-	
-	private static void ReportsMenu() {
-		System.out.println("This feature is still WIP and is not available in this version.");
-		scanner.nextLine();
 	}
 }
